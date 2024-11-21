@@ -10,14 +10,9 @@ def combine_tracks(filepath="combined_audio.m4a", dir="tmp"):
     if not input_files:
         raise ValueError("No input files found in the 'tmp' directory.")
 
-    # Create FFmpeg input streams
     inputs = [ffmpeg.input(file) for file in input_files]
-
-    # Number of input streams
     num_inputs = len(input_files)
 
-    # Construct the filter_complex for the 'join' filter
-    # Use a custom channel layout: '<num_inputs>.0'
     if len(input_files) ==1:
         shutil.copy(input_files[0], filepath)
         return
@@ -34,5 +29,4 @@ def combine_tracks(filepath="combined_audio.m4a", dir="tmp"):
     except ffmpeg.Error as e:
         # Check if stderr is None or empty and raise more detailed error
         error_message = e.stderr.decode() if e.stderr else f"No detailed error message available. Raw error: {str(e)}"
-        print(f"FFmpeg Error: {error_message}")  # Print the error message to help with debugging
         raise RuntimeError(f"FFmpeg error: {error_message}") from e
