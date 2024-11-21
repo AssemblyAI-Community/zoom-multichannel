@@ -98,7 +98,6 @@ class ZoomClient:
     @api_call
     def get_meeting_recordings(self, meeting_uuid, params=None):
         url = urljoin(self.BASE_URL, f"meetings/{meeting_uuid}/recordings")
-        params = {'from': '2021-01-01'}
         return requests.get(url, headers=self.auth_header, params=params)
 
     def download_participant_audio_files(self, meeting_uuid, path='tmp'):
