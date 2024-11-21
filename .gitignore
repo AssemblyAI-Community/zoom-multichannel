@@ -1,0 +1,8 @@
+.env
+*/__pycache__
+venv
+transcript.txt
+**/tmp
+**.m4a
+**.ipynb_checkpoints
+**/recordings
