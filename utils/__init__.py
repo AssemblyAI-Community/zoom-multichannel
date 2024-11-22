@@ -13,18 +13,18 @@ def combine_tracks(filepath="combined_audio.m4a", dir="tmp", safe=True):
         raise ValueError("No input files found in the 'tmp' directory.")
 
     inputs = [ffmpeg.input(file) for file in input_files]
-    num_inputs = len(input_files)
 
-    if len(input_files) ==1:
-        shutil.copy(input_files[0], filepath)
-        return
-    elif len(input_files) == 2:
-        join_filter = f'join=inputs={num_inputs}'
-    else:
-        # ffmpeg incorrectly assumes 2 channel => stereo rather than dual mono in case of two files
-        join_filter = f'join=inputs={num_inputs}:channel_layout={num_inputs}.0'
+    # Dynamically generate `-map` arguments for separate tracks
+    map_args = []
+    for i in range(len(inputs)):
+        map_args.extend(["-map", f"{i}:a"])
 
-    ffmpeg_command = ffmpeg.output(*inputs, filepath, filter_complex=join_filter, **{'loglevel': 'error'})
+    ffmpeg_command = (
+        ffmpeg
+        .output(*inputs, filepath, **{'loglevel': 'error'})
+        .global_args(*map_args)
+    )
+
     if not safe:
         ffmpeg_command = ffmpeg_command.overwrite_output()
 
