@@ -12,17 +12,16 @@ def combine_tracks(filepath="combined_audio.m4a", dir="tmp", safe=True):
     if not input_files:
         raise ValueError("No input files found in the 'tmp' directory.")
 
-    inputs = [ffmpeg.input(file) for file in input_files]
+    # Create input streams
+    inputs = [ffmpeg.input(file, ac=1) for file in input_files]  # Ensure each input is mono
+    
+    # Construct the amerge filter to merge inputs into separate channels
+    filter_complex = f"amerge=inputs={len(inputs)}"
 
-    # Dynamically generate `-map` arguments for separate tracks
-    map_args = []
-    for i in range(len(inputs)):
-        map_args.extend(["-map", f"{i}:a"])
-
+    # Construct the ffmpeg command
     ffmpeg_command = (
         ffmpeg
-        .output(*inputs, filepath, **{'loglevel': 'error'})
-        .global_args(*map_args)
+        .output(*inputs, filepath, filter_complex=filter_complex, ac=len(inputs), **{'loglevel': 'error'})
     )
 
     if not safe:
