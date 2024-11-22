@@ -12,7 +12,7 @@ aai.settings.api_key = os.environ.get('ASSEMBLYAI_API_KEY')
 
 # ensure all required environment variables are available
 if not aai.settings.api_key:
-    raise EnvironmentError("Missing ASSEMBLYAI_API_KEY")
+    raise RuntimeError("Missing ASSEMBLYAI_API_KEY")
 
 # instantiate AssemblyAI transcriber with multichannel speech-to-text enabled
 config = aai.TranscriptionConfig(multichannel=True)
