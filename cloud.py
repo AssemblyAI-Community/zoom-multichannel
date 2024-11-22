@@ -17,7 +17,7 @@ aai.settings.api_key = os.environ.get('ASSEMBLYAI_API_KEY')
 
 # ensure all required environment variables are available
 if not all([ZOOM_ACCOUNT_ID, ZOOM_CLIENT_ID, ZOOM_CLIENT_SECRET, aai.settings.api_key]):
-    raise EnvironmentError(
+    raise RuntimeError(
         "Missing one or more required environment variables: "
         "ZOOM_ACCOUNT_ID, ZOOM_CLIENT_ID, ZOOM_CLIENT_SECRET, ASSEMBLYAI_API_KEY"
     )
