@@ -7,13 +7,7 @@ from functools import wraps
 import requests
 
 
-class ZoomClientError(Exception):
-    """Base exception for Zoom client errors."""
-
-    pass
-
-
-class ZoomAPIError(ZoomClientError):
+class ZoomAPIError(Exception):
     """Exception for Zoom API errors."""
 
     def __init__(self, status_code, message):
@@ -33,7 +27,7 @@ def api_call(func: Callable[..., requests.Response]):
 
         response = func(*args, **kwargs)
         if not isinstance(response, requests.Response):
-            raise ZoomClientError(
+            raise TypeError(
                 f"Function `{func.__name__}` must return a `requests.Response` object."
             )
         if response.status_code != 200:
@@ -45,7 +39,7 @@ def api_call(func: Callable[..., requests.Response]):
         try:
             return response.json()
         except ValueError:
-            raise ZoomClientError("Response is not JSON formatted.")
+            raise ValueError("Response is not JSON formatted.")
 
     return wrapper
 
