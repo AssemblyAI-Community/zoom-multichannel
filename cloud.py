@@ -42,7 +42,7 @@ def main():
     
     # send to AssemblyAI for multichannel speech-to-text and print the results
     transcript = transcriber.transcribe(path)
-    print(transcript.json_response["audio_channels"])
+    print(f"Number of channels: {transcript.json_response["audio_channels"]}")
     for utt in transcript.utterances:
         print(utt)
 
