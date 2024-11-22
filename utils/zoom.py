@@ -1,5 +1,6 @@
 import os
 import time
+from typing import Callable
 from urllib.parse import urljoin
 from functools import wraps
 
@@ -21,8 +22,8 @@ class ZoomAPIError(ZoomClientError):
         self.message = message
 
 
-def api_call(func):
-    """Decorator to handle API call errors."""
+def api_call(func: Callable[..., requests.Response]):
+    """Decorator to handle API call errors. Ensure the function returns a `requests.Response` object."""
 
     @wraps(func)
     def wrapper(*args, **kwargs):
