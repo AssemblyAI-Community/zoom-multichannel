@@ -8,7 +8,6 @@ def combine_tracks(filepath="combined_audio.m4a", dir="tmp", safe=True):
     if safe and os.path.exists(filepath):
         raise FileExistsError(f"The file '{filepath}' already exists.")
         
-    # List input files from the 'tmp' directory
     input_files = [os.path.join(dir, file) for file in os.listdir(dir) if file.endswith('.m4a')]
     if not input_files:
         raise ValueError("No input files found in the 'tmp' directory.")
@@ -29,11 +28,8 @@ def combine_tracks(filepath="combined_audio.m4a", dir="tmp", safe=True):
     if not safe:
         ffmpeg_command = ffmpeg_command.overwrite_output()
 
-    # Run the ffmpeg command to combine the tracks
     try:
         ffmpeg_command.run()
     except ffmpeg.Error as e:
-        # Check if stderr is None or empty and raise more detailed error
         error_message = e.stderr.decode() if e.stderr else f"No detailed error message available. Raw error: {str(e)}"
-        print(f"FFmpeg Error: {error_message}")  # Print the error message to help with debugging
         raise RuntimeError(f"FFmpeg error: {error_message}") from e
